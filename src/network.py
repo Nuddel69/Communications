@@ -10,7 +10,7 @@ class Network():
         self.server = server
         self.port = port
         self.addr = (self.server, self.port)
-        self.id = self.connect()
+        # self.id = self.connect()
 
     def connect(self) -> str:
         '''
@@ -22,8 +22,8 @@ class Network():
 
         try:
             self.client.connect(self.addr)
-            return self.client.recv(2048).decode("utf-8")
-        except:
+            return self.client.recv(2048).decode()
+        except ValueError:
             return "Connection failed"
 
     def send(self, data: str) -> str:

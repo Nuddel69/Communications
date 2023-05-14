@@ -1,4 +1,6 @@
 import pygame
+from example_network import GameNetwork
+
 WIDTH = 500
 HEIGHT= 500
 
@@ -36,29 +38,52 @@ class Player():
         if keys[pygame.K_DOWN]:
             self.y += self.vel
 
+        self.update()
+
+    def update(self):
         self.rect = (self.x, self.y, self.width, self.height)
 
 
-def redrawWindow(win,player):
+def redrawWindow(win,players: list[Player]):
     win.fill((255,255,255))
-    player.draw(win)
+
+    for player in players:
+        player.draw(win)
+
     pygame.display.update()
 
+def parse_pos(string: str) -> tuple[int, int]:
+    pos = string.split(",")
+    return int(pos[0]), int(pos[1])
 
-def main():
+def stringify_pos(pos:  tuple[int, int]) -> str:
+    return f"{pos[0]},{pos[1]}"
+
+
+def main() -> None:
     run = True
-    p = Player(50,50,100,100,(0,255,0))
+    n = GameNetwork("127.0.0.1", 5555)
+    startPos = parse_pos(n.getPos())
+
+    p = Player(startPos[0],startPos[1],100,100,(0,255,0))
+    p2 = Player(0,0,100,100,(0,255,0))
     clock = pygame.time.Clock()
 
     while run:
         clock.tick(60)
+
+        p2_pos = parse_pos(n.send(stringify_pos((p.x, p.y))))
+        p2.x, p2.y = p2_pos
+        p2.update()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                n.send(stringify_pos((p.x, p.y)))
                 run = False
                 pygame.quit()
 
         p.move()
-        redrawWindow(win, p)
+        redrawWindow(win, [p, p2])
 
 if __name__ == "__main__":
     main()
