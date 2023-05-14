@@ -1,6 +1,9 @@
+'''
+Server
+'''
+
 import socket
-from _thread import *
-import sys
+from _thread import start_new_thread
 
 server = "127.0.0.1"
 port = 5555
@@ -16,7 +19,11 @@ s.listen(2)
 print("Waiting for a connection, Server Started")
 
 
-def threaded_client(conn):
+def threaded_client(conn: socket.socket) -> None:
+    '''
+    Client-instance listener
+    '''
+
     conn.send(str.encode("Connected"))
     reply = ""
     while True:

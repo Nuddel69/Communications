@@ -1,11 +1,11 @@
 import pygame
+WIDTH = 500
+HEIGHT= 500
 
-width = 500
-height = 500
-win = pygame.display.set_mode((width, height))
+win = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Client")
 
-clientNumber = 0
+CLIENTNUMBER = 0
 
 
 class Player():
